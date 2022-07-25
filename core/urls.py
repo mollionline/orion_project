@@ -22,6 +22,7 @@ from drf_yasg import openapi
 schema_view = get_schema_view(
     openapi.Info(
         title="Orion API",
+        description='При авторизации введите Token + пробел + токен',
         default_version='v1',
     ),
     public=True,
