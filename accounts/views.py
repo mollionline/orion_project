@@ -3,9 +3,10 @@ import json
 from django.http import JsonResponse, Http404
 
 # Create your views here.
-from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import generics, filters
 from rest_framework.generics import GenericAPIView
+from rest_framework.permissions import IsAuthenticated
+
 from api_v1.views import UserPermission
 from .serializers import UserSerializers
 from .models import User
@@ -49,14 +50,14 @@ class DeleteUserAPIView(GenericAPIView):
         return JsonResponse({'deleted user pk': user.pk})
 
 
-class UpdateUserAPIView(generics.UpdateAPIView):
-    """Обновить инф о клиента"""
-    permission_classes = [UserPermission]
-    queryset = User.objects.all()
+class UpdateUserAPIView(generics.GenericAPIView):
+    """Обновить инф о клиенте и дать право клиента при необходимости"""
+    permission_classes = [IsAuthenticated]
+    queryset = User.objects.all().exclude(is_staff=True)
     serializer_class = UserSerializers
     lookup_field = 'pk'
 
-    def update(self, request, *args, **kwargs):
+    def put(self, request, *args, **kwargs):
         instance = self.get_object()
         serializer = self.get_serializer(instance, data=request.data)
         if serializer.is_valid():
