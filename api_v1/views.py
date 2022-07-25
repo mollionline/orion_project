@@ -60,7 +60,7 @@ class SignInAPIView(GenericAPIView):
             password=signin_serializer.data['password']
         )
         if not user:
-            return Response({'detail': 'Invalid Credentials or activate account'}, status=HTTP_404_NOT_FOUND)
+            return Response({'detail': 'Неверные учетные данные или активируйте учетную запись'}, status=HTTP_404_NOT_FOUND)
 
         # TOKEN STUFF
         token, _ = Token.objects.get_or_create(user=user)
@@ -80,5 +80,5 @@ class SignInAPIView(GenericAPIView):
 def user_info(request):
     return Response({
         'user': request.user.username,
-        'expires_in': expires_in(request.auth)
+        'expires_in': f"{expires_in(request.auth)} секунд"
     }, status=HTTP_200_OK)
