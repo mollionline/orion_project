@@ -3,7 +3,8 @@ import json
 from django.http import JsonResponse, Http404
 
 # Create your views here.
-from rest_framework import generics
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import generics, filters
 from rest_framework.generics import GenericAPIView
 from api_v1.views import UserPermission
 from .serializers import UserSerializers
@@ -65,11 +66,10 @@ class UpdateUserAPIView(generics.UpdateAPIView):
             return Response({"message": "Ошибка", "details": serializer.errors})
 
 
-class UserListAPIView(GenericAPIView):
-    """Список клиентов"""
+class UserListAPIView(generics.ListAPIView):
+    """Список клиентов и фильтрация по юзернейму и по email"""
     serializer_class = UserSerializers
+    queryset = User.objects.all().exclude(is_staff=True)
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['username', 'email']
 
-    def get(self, request, *args, **kwargs):
-        users = User.objects.all()
-        serializer = UserSerializers(users, many=True)
-        return JsonResponse(serializer.data, safe=False)
