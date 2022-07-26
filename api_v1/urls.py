@@ -3,7 +3,9 @@ from .views import (LogoutView, user_info, SignInAPIView,
                     CreateNodeAPIView, UpdateNodeAPIView,
                     NodesListAPIView, CreateDeviceAPIView,
                     DeleteDeviceAPIView, UpdateDeviceAPIView,
-                    DevicesListAPIView)
+                    DevicesListAPIView, CreateMeterAPIView,
+                    DeleteMeterAPIView, MeterListAPIView,
+                    UpdateMeterAPIView, ApartmentFilterMeterAPIView)
 from accounts.views import CreateUserAPIView, DeleteUserAPIView, UpdateUserAPIView, UserListAPIView
 
 urlpatterns = [
@@ -21,4 +23,9 @@ urlpatterns = [
     path('device/<str:uuid>/delete', DeleteDeviceAPIView.as_view(), name='device_delete'),
     path('device/<str:uuid>/update', UpdateDeviceAPIView.as_view(), name='device_update'),
     path('devices/', DevicesListAPIView.as_view(), name='device_list'),
+    path('device/<str:uuid>/meter_create', CreateMeterAPIView.as_view(), name='meter_create'),
+    path('meter/<str:uuid>/delete', DeleteMeterAPIView.as_view(), name='meter_delete'),
+    path('meters/', MeterListAPIView.as_view(), name='meter_list'),
+    path('meter/<str:uuid>/update', UpdateMeterAPIView.as_view(), name='meter_update'),
+    path('apartment_node/meter', ApartmentFilterMeterAPIView.as_view())
 ]

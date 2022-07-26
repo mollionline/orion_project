@@ -120,7 +120,7 @@ class Meter(models.Model):
                                         default='False')
 
     def __str__(self):
-        return self.serial_number
+        return f"{self.serial_number}"
 
 
 class Node(models.Model):

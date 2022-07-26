@@ -32,3 +32,11 @@ class DeviceSerializerUpdate(serializers.ModelSerializer):
         fields = ['uuid', 'dev_eui', 'updated_at', 'activated_at',
                   'on_off', 'description', 'type', 'owner', 'device_permission', 'apartment', 'house']
         read_only_fields = ['uuid', 'apartment', 'house']
+
+
+class MeterSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Meter
+        fields = ['uuid', 'serial_number', 'on_off', 'registration',
+                  'first_testify_date', 'start_value', 'measure', 'meter_permission']
+        read_only_fields = ['uuid']
