@@ -1,6 +1,5 @@
 import json
 
-from django.core import serializers
 from django.http import Http404, JsonResponse
 from rest_framework.generics import GenericAPIView
 from rest_framework.views import APIView
@@ -16,7 +15,8 @@ from rest_framework.status import (
 )
 from rest_framework.response import Response
 
-from .serializers import UserSigninSerializer, UserSerializer, NodeSerializer, DeviceSerializer, DeviceSerializerUpdate
+from .serializers import (UserSigninSerializer, UserSerializer, NodeSerializer,
+                          DeviceSerializer, DeviceSerializerUpdate, MeterSerializer)
 from .authentication import token_expire_handler, expires_in
 from .models import Apartment, House, Node, Device, Meter
 
@@ -200,7 +200,7 @@ class DeleteDeviceAPIView(GenericAPIView):
     def delete(self, request, uuid):
         device = self.get_object(uuid)
         device.delete()
-        return JsonResponse({'deleted device pk': device.uuid})
+        return JsonResponse({'deleted device uuid': device.uuid})
 
 
 class UpdateDeviceAPIView(GenericAPIView):
@@ -223,9 +223,100 @@ class UpdateDeviceAPIView(GenericAPIView):
             response.status_code = 400
             return response
 
+
 class DevicesListAPIView(generics.ListAPIView):
     """Список устройств и фильтрация по приведенным полям"""
     serializer_class = DeviceSerializer
     queryset = Device.objects.all()
     filter_backends = [filters.SearchFilter]
     search_fields = ['dev_eui', 'owner', 'uuid']
+
+
+class CreateMeterAPIView(GenericAPIView):
+    """Создать счетчик в привязке к квартире"""
+    permission_classes = [IsAuthenticated]
+    serializer_class = MeterSerializer
+
+    def get_queryset(self):
+        return Device.objects.all()
+
+    def get_object(self, uuid):
+        try:
+            return Device.objects.get(uuid=uuid)
+        except Apartment.DoesNotExist:
+            raise Http404
+
+    def post(self, request, uuid, *args, **kwargs):
+        device = self.get_object(uuid)
+        data = json.loads(request.body)
+        serializer = MeterSerializer(data=data)
+        if serializer.is_valid():
+            serializer.save()
+            device.meter.add(serializer.data.get('uuid'))
+            return JsonResponse(serializer.data, safe=False)
+        else:
+            response = JsonResponse({'errors': serializer.errors})
+            response.status_code = 400
+            return response
+
+
+class DeleteMeterAPIView(GenericAPIView):
+    """Удалить счетчик"""
+    permission_classes = [UserPermission]
+    serializer_class = MeterSerializer
+
+    def get_queryset(self):
+        return Meter.objects.all()
+
+    def get_object(self, uuid):
+        try:
+            return Meter.objects.get(uuid=uuid)
+        except Meter.DoesNotExist:
+            raise Http404
+
+    def delete(self, request, uuid):
+        meter = self.get_object(uuid)
+        meter.delete()
+        return JsonResponse({'deleted meter uuid': meter.uuid})
+
+
+class MeterListAPIView(generics.ListAPIView):
+    """Список счетчиков и фильтрация по приведенным полям"""
+    serializer_class = MeterSerializer
+    queryset = Meter.objects.all()
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['serial_number', 'uuid']
+
+
+class UpdateMeterAPIView(GenericAPIView):
+    """Редактировать счетчик по uuid"""
+    permission_classes = [IsAuthenticated]
+    serializer_class = MeterSerializer
+    lookup_field = 'uuid'
+
+    def get_queryset(self):
+        return Meter.objects.all()
+
+    def put(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = MeterSerializer(instance, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return JsonResponse(serializer.data, safe=False)
+        else:
+            response = JsonResponse({'errors': serializer.errors})
+            response.status_code = 400
+            return response
+
+
+class ApartmentFilterMeterAPIView(generics.ListAPIView):
+    """Список счетчиков у квартир по uuid узла"""
+    def get(self, request):
+        filter_url = self.request.query_params.get('search', None)
+        apartment = Apartment.objects.all()
+        if filter_url is not None:
+            apartment = Apartment.objects.filter(node__uuid=filter_url).values_list('id', flat=True)
+            apartment_id = int(list(apartment)[0])
+            meters = Meter.objects.filter(device_meters__apartment=apartment_id).values()
+
+        return Response(meters)

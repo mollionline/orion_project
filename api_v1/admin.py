@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import City, District, Street, House, Apartment, Node, Device
+from .models import City, District, Street, House, Apartment, Node, Device, Meter
 
 
 # Register your models here.
@@ -45,3 +45,12 @@ class DeviceAdmin(admin.ModelAdmin):
     list_display = (
         'uuid', 'dev_eui', 'updated_at', 'activated_at',
         'on_off', 'description', 'type', 'owner', 'device_permission', 'apartment', 'house')
+
+
+@admin.register(Meter)
+class MeterAdmin(admin.ModelAdmin):
+    """Счетчик"""
+    list_display = (
+        'uuid', 'serial_number', 'on_off', 'registration',
+        'first_testify_date', 'start_value', 'measure', 'meter_permission'
+    )
