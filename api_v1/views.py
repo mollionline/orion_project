@@ -16,9 +16,9 @@ from rest_framework.status import (
 )
 from rest_framework.response import Response
 
-from .serializers import UserSigninSerializer, UserSerializer, NodeSerializer
+from .serializers import UserSigninSerializer, UserSerializer, NodeSerializer, DeviceSerializer, DeviceSerializerUpdate
 from .authentication import token_expire_handler, expires_in
-from .models import Apartment, House, Node
+from .models import Apartment, House, Node, Device, Meter
 
 
 # Create your views here.
@@ -124,7 +124,7 @@ class CreateNodeAPIView(generics.GenericAPIView):
             return response
 
 
-class UpdateNodeAPIView(generics.GenericAPIView):
+class UpdateNodeAPIView(GenericAPIView):
     """Редактировать узел по uuid"""
     permission_classes = [IsAuthenticated]
     serializer_class = NodeSerializer
@@ -152,3 +152,80 @@ class NodesListAPIView(generics.ListAPIView):
     queryset = Node.objects.all()
     filter_backends = [filters.SearchFilter]
     search_fields = ['description', 'name', 'address', 'owner', 'uuid']
+
+
+class CreateDeviceAPIView(GenericAPIView):
+    """Создать устройство в привязке к квартире"""
+    permission_classes = [IsAuthenticated]
+    serializer_class = DeviceSerializer
+
+    def get_queryset(self):
+        return Apartment.objects.all()
+
+    def get_object(self, pk):
+        try:
+            return Apartment.objects.get(pk=pk)
+        except Apartment.DoesNotExist:
+            raise Http404
+
+    def post(self, request, pk, *args, **kwargs):
+        apartment = self.get_object(pk)
+        data = json.loads(request.body)
+        data['apartment'] = apartment.pk
+        data['house'] = None
+        serializer = DeviceSerializer(data=data)
+        if serializer.is_valid():
+            serializer.save()
+            return JsonResponse(serializer.data, safe=False)
+        else:
+            response = JsonResponse({'errors': serializer.errors})
+            response.status_code = 400
+            return response
+
+
+class DeleteDeviceAPIView(GenericAPIView):
+    """Удалить устройство"""
+    permission_classes = [UserPermission]
+    serializer_class = DeviceSerializer
+
+    def get_queryset(self):
+        return Device.objects.all()
+
+    def get_object(self, uuid):
+        try:
+            return Device.objects.get(uuid=uuid)
+        except Device.DoesNotExist:
+            raise Http404
+
+    def delete(self, request, uuid):
+        device = self.get_object(uuid)
+        device.delete()
+        return JsonResponse({'deleted device pk': device.uuid})
+
+
+class UpdateDeviceAPIView(GenericAPIView):
+    """Редактировать устройство по uuid"""
+    permission_classes = [IsAuthenticated]
+    serializer_class = DeviceSerializerUpdate
+    lookup_field = 'uuid'
+
+    def get_queryset(self):
+        return Device.objects.all()
+
+    def put(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = DeviceSerializerUpdate(instance, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return JsonResponse(serializer.data, safe=False)
+        else:
+            response = JsonResponse({'errors': serializer.errors})
+            response.status_code = 400
+            return response
+
+class DevicesListAPIView(generics.ListAPIView):
+    """Список устройств и фильтрация по приведенным полям"""
+    serializer_class = DeviceSerializer
+    queryset = Device.objects.all()
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['dev_eui', 'owner', 'uuid']

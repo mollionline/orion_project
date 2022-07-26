@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import City, District, Street, House, Apartment, Node
+from .models import City, District, Street, House, Apartment, Node, Device
 
 
 # Register your models here.
@@ -24,16 +24,24 @@ class StreetAdmin(admin.ModelAdmin):
 @admin.register(House)
 class HouseAdmin(admin.ModelAdmin):
     """Дом"""
-    list_display = ('name', 'apartment', 'customer', 'node')
+    list_display = ('name', 'apartment', 'node')
 
 
 @admin.register(Apartment)
 class ApartmentAdmin(admin.ModelAdmin):
     """Квартира"""
-    list_display = ('number', 'customer', 'node')
+    list_display = ('number', 'node')
 
 
 @admin.register(Node)
 class NodeAdmin(admin.ModelAdmin):
     """Узел"""
     list_display = ('uuid', 'geo', 'name', 'description', 'owner', 'address', 'node_permission')
+
+
+@admin.register(Device)
+class DeviceAdmin(admin.ModelAdmin):
+    """Устройство"""
+    list_display = (
+        'uuid', 'dev_eui', 'updated_at', 'activated_at',
+        'on_off', 'description', 'type', 'owner', 'device_permission', 'apartment', 'house')
