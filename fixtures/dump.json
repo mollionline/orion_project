@@ -1,0 +1,283 @@
+[
+{
+  "model": "accounts.user",
+  "pk": 1,
+  "fields": {
+    "password": "pbkdf2_sha256$320000$bFdFVEed8gCeKqyj7jej3w$2i0lE+J/5Rh0Vsh+U0mBrPw5q9Hz0GOAhPNA1Gh/Yfo=",
+    "last_login": "2022-07-25T09:31:08.065Z",
+    "is_superuser": true,
+    "username": "admin",
+    "first_name": "",
+    "last_name": "",
+    "is_staff": true,
+    "is_active": true,
+    "date_joined": "2022-07-25T08:46:43.369Z",
+    "email": "admin@email.com",
+    "description": null,
+    "user_permission": "False",
+    "groups": [],
+    "user_permissions": [],
+    "apartment": [],
+    "house": []
+  }
+},
+{
+  "model": "accounts.user",
+  "pk": 2,
+  "fields": {
+    "password": "babyboss",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "babyboss",
+    "first_name": "string",
+    "last_name": "string",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2022-07-25T09:35:47Z",
+    "email": "user@example.com",
+    "description": "string",
+    "user_permission": "has_not_permission",
+    "groups": [],
+    "user_permissions": [],
+    "apartment": [],
+    "house": []
+  }
+},
+{
+  "model": "accounts.user",
+  "pk": 4,
+  "fields": {
+    "password": "string",
+    "last_login": null,
+    "is_superuser": true,
+    "username": "string",
+    "first_name": "string",
+    "last_name": "string",
+    "is_staff": true,
+    "is_active": true,
+    "date_joined": "2022-07-25T10:08:45Z",
+    "email": "user@example.com",
+    "description": "string",
+    "user_permission": "has_not_permission",
+    "groups": [],
+    "user_permissions": [],
+    "apartment": [],
+    "house": []
+  }
+},
+{
+  "model": "api_v1.city",
+  "pk": 1,
+  "fields": {
+    "name": "Алматы",
+    "district": 1,
+    "street": 1
+  }
+},
+{
+  "model": "api_v1.district",
+  "pk": 1,
+  "fields": {
+    "name": "Ауэзовский район",
+    "street": 1
+  }
+},
+{
+  "model": "api_v1.street",
+  "pk": 1,
+  "fields": {
+    "name": "Тимирязева, 42",
+    "house": 1
+  }
+},
+{
+  "model": "api_v1.house",
+  "pk": 1,
+  "fields": {
+    "name": "23 павильон",
+    "apartment": 2,
+    "node": null
+  }
+},
+{
+  "model": "api_v1.apartment",
+  "pk": 1,
+  "fields": {
+    "number": 209,
+    "node": "2ce4528a-86b4-40bb-8f41-46acdc2ac8db"
+  }
+},
+{
+  "model": "api_v1.apartment",
+  "pk": 2,
+  "fields": {
+    "number": 203,
+    "node": "c4aba6cd-ef62-4984-9eb4-cc9f1e1c1f10"
+  }
+},
+{
+  "model": "api_v1.device",
+  "pk": "2708e928-1f03-417b-b7a9-e073fc2e497a",
+  "fields": {
+    "dev_eui": "string",
+    "updated_at": "2022-07-26T05:43:28.493Z",
+    "activated_at": "2022-07-26T05:42:46.511Z",
+    "on_off": "Выкл",
+    "description": "string",
+    "type": "string",
+    "owner": "string",
+    "device_permission": "False",
+    "apartment": 1,
+    "house": null,
+    "meter": []
+  }
+},
+{
+  "model": "api_v1.device",
+  "pk": "2b0ea90a-5479-4880-b305-d9d18ab82935",
+  "fields": {
+    "dev_eui": "jdkdkldll89",
+    "updated_at": "2022-07-26T05:16:29.344Z",
+    "activated_at": "2022-07-26T04:53:23.685Z",
+    "on_off": "Выкл",
+    "description": "string",
+    "type": "string",
+    "owner": "string",
+    "device_permission": "False",
+    "apartment": 1,
+    "house": null,
+    "meter": []
+  }
+},
+{
+  "model": "api_v1.device",
+  "pk": "c4c42efe-0f8e-4041-977e-5d082ad6abcc",
+  "fields": {
+    "dev_eui": "78623jkdkdk",
+    "updated_at": "2022-07-26T06:10:29.153Z",
+    "activated_at": "2022-07-26T06:04:43.467Z",
+    "on_off": "Выкл",
+    "description": "string",
+    "type": "string",
+    "owner": "Hellooooo",
+    "device_permission": "True",
+    "apartment": 1,
+    "house": null,
+    "meter": []
+  }
+},
+{
+  "model": "api_v1.device",
+  "pk": "c6f69a58-a1c7-4257-bcd4-1e5367dcd428",
+  "fields": {
+    "dev_eui": "string86985",
+    "updated_at": "2022-07-26T05:07:15.130Z",
+    "activated_at": "2022-07-26T04:53:23.685Z",
+    "on_off": "Выкл",
+    "description": "string",
+    "type": "string",
+    "owner": "string",
+    "device_permission": "False",
+    "apartment": 1,
+    "house": null,
+    "meter": [
+      "4e45641e-4538-401a-be61-5a3eb1ded725"
+    ]
+  }
+},
+{
+  "model": "api_v1.device",
+  "pk": "eafe2d5c-a014-4385-bf3f-fa1663a3ae60",
+  "fields": {
+    "dev_eui": "string856776",
+    "updated_at": "2022-07-26T06:50:52.219Z",
+    "activated_at": "2022-07-26T05:46:18Z",
+    "on_off": "Выкл",
+    "description": "string",
+    "type": "string",
+    "owner": "string",
+    "device_permission": "False",
+    "apartment": 1,
+    "house": null,
+    "meter": [
+      "3711878b-e2b6-4ec6-a590-b6242bb43035"
+    ]
+  }
+},
+{
+  "model": "api_v1.meter",
+  "pk": "3711878b-e2b6-4ec6-a590-b6242bb43035",
+  "fields": {
+    "serial_number": 0,
+    "on_off": "Выкл",
+    "registration": "2022-07-26T06:39:24.974Z",
+    "first_testify_date": "2022-07-26T06:39:24.974Z",
+    "start_value": 0,
+    "measure": "string",
+    "meter_permission": "False"
+  }
+},
+{
+  "model": "api_v1.meter",
+  "pk": "4e45641e-4538-401a-be61-5a3eb1ded725",
+  "fields": {
+    "serial_number": 665656,
+    "on_off": "Выкл",
+    "registration": "2022-07-26T06:53:14.202Z",
+    "first_testify_date": "2022-07-26T06:53:14.202Z",
+    "start_value": 0,
+    "measure": "string",
+    "meter_permission": "False"
+  }
+},
+{
+  "model": "api_v1.meter",
+  "pk": "aaccf355-8282-4ece-9ec6-d39b6bf4bb2c",
+  "fields": {
+    "serial_number": 6669345,
+    "on_off": "Выкл",
+    "registration": "2022-07-26T07:45:19.439Z",
+    "first_testify_date": "2022-07-26T07:45:19.439Z",
+    "start_value": 0,
+    "measure": "m",
+    "meter_permission": "False"
+  }
+},
+{
+  "model": "api_v1.meter",
+  "pk": "b36066be-8fff-4f7d-b5ce-471b91e43a7b",
+  "fields": {
+    "serial_number": 785656,
+    "on_off": "Выкл",
+    "registration": "2022-07-26T06:53:14.202Z",
+    "first_testify_date": "2022-07-26T06:53:14.202Z",
+    "start_value": 0,
+    "measure": "string",
+    "meter_permission": "False"
+  }
+},
+{
+  "model": "api_v1.node",
+  "pk": "2ce4528a-86b4-40bb-8f41-46acdc2ac8db",
+  "fields": {
+    "geo": "string",
+    "name": "string",
+    "description": "string",
+    "owner": "string",
+    "address": "string",
+    "node_permission": "False"
+  }
+},
+{
+  "model": "api_v1.node",
+  "pk": "c4aba6cd-ef62-4984-9eb4-cc9f1e1c1f10",
+  "fields": {
+    "geo": "string",
+    "name": "hello",
+    "description": "123dooo",
+    "owner": "hellosan",
+    "address": "address",
+    "node_permission": "False"
+  }
+}
+]
