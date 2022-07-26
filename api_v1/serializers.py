@@ -40,3 +40,10 @@ class MeterSerializer(serializers.ModelSerializer):
         fields = ['uuid', 'serial_number', 'on_off', 'registration',
                   'first_testify_date', 'start_value', 'measure', 'meter_permission']
         read_only_fields = ['uuid']
+
+
+class ApartmentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Apartment
+        fields = ['id', 'number', 'node']
+        read_only_fields = ['id']

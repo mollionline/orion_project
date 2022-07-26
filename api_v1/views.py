@@ -16,7 +16,8 @@ from rest_framework.status import (
 from rest_framework.response import Response
 
 from .serializers import (UserSigninSerializer, UserSerializer, NodeSerializer,
-                          DeviceSerializer, DeviceSerializerUpdate, MeterSerializer)
+                          DeviceSerializer, DeviceSerializerUpdate, MeterSerializer,
+                          ApartmentSerializer)
 from .authentication import token_expire_handler, expires_in
 from .models import Apartment, House, Node, Device, Meter
 
@@ -311,12 +312,33 @@ class UpdateMeterAPIView(GenericAPIView):
 
 class ApartmentFilterMeterAPIView(generics.ListAPIView):
     """Список счетчиков у квартир по uuid узла"""
+
+    filter_backends = [filters.SearchFilter]
+    serializer_class = ApartmentSerializer
+
     def get(self, request):
         filter_url = self.request.query_params.get('search', None)
         apartment = Apartment.objects.all()
+        meters = ''
         if filter_url is not None:
             apartment = Apartment.objects.filter(node__uuid=filter_url).values_list('id', flat=True)
             apartment_id = int(list(apartment)[0])
             meters = Meter.objects.filter(device_meters__apartment=apartment_id).values()
 
         return Response(meters)
+
+
+class DeviceFilterRangeDatesAPIView(generics.ListAPIView):
+    """Возможность видеть показания за период"""
+    filter_backends = [filters.SearchFilter]
+    serializer_class = DeviceSerializer
+
+    def get(self, request):
+        start_date = self.request.query_params.get('start_date', None)
+        end_date = self.request.query_params.get('end_date', None)
+        devices = ''
+        if start_date is not None and end_date is not None:
+            devices = Device.objects.filter(updated_at__range=[start_date, end_date]).values_list('id', flat=True)
+            devices_list = list(devices)
+
+        return Response(devices)
