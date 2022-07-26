@@ -54,8 +54,6 @@ class House(models.Model):
                                   on_delete=models.CASCADE, null=True, blank=True)
     node = models.ForeignKey('api_v1.Node', verbose_name='Узел', related_name='house_nodes',
                              on_delete=models.CASCADE, null=True, blank=True)
-    customer = models.ForeignKey('accounts.User', verbose_name='Клиент', related_name='house_customers',
-                                 on_delete=models.CASCADE, null=True, blank=True)
 
     def __str__(self):
         return self.name
@@ -66,8 +64,7 @@ class Apartment(models.Model):
     number = models.PositiveIntegerField(verbose_name='Квартира')
     node = models.ForeignKey('api_v1.Node', verbose_name='Узел', related_name='apartment_nodes',
                              on_delete=models.CASCADE, null=True, blank=True)
-    customer = models.ForeignKey('accounts.User', verbose_name='Клиент', related_name='apartment_customers',
-                                 on_delete=models.CASCADE, null=True, blank=True)
+
 
     def __str__(self):
         return f"{self.number}"
@@ -92,13 +89,15 @@ class Device(models.Model):
     device_permission = models.CharField(max_length=50, null=False, blank=False,
                                          choices=MODERATOR_STATUS_CHOICES, verbose_name="Права устройства",
                                          default='False')
-
-    def __init__(self):
-        super(Device, self).__init__()
-        self.dev_eui = str(uuid.uuid4).capitalize()
+    apartment = models.ForeignKey('api_v1.Apartment', verbose_name='Квартира', related_name='device_apartments',
+                                  on_delete=models.CASCADE, null=True, blank=True)
+    house = models.ForeignKey('api_v1.House', verbose_name='Дом', related_name='device_houses',
+                              on_delete=models.CASCADE, null=True, blank=True)
+    meter = models.ManyToManyField('api_v1.Meter', verbose_name='Счетчик', related_name='device_meters',
+                                   blank=True)
 
     def __str__(self):
-        return self.dev_eui
+        return f"{self.dev_eui}"
 
 
 class Meter(models.Model):
@@ -138,8 +137,8 @@ class Node(models.Model):
     owner = models.CharField(max_length=100, verbose_name='Владелец', null=True, blank=True)
     address = models.CharField(max_length=150, verbose_name='Адрес')
     node_permission = models.CharField(max_length=50, null=False, blank=False,
-                                        choices=MODERATOR_STATUS_CHOICES, verbose_name="Права узла",
-                                        default='False')
+                                       choices=MODERATOR_STATUS_CHOICES, verbose_name="Права узла",
+                                       default='False')
 
     def __str__(self):
         return self.name
