@@ -5,7 +5,8 @@ from .views import (LogoutView, user_info, SignInAPIView,
                     DeleteDeviceAPIView, UpdateDeviceAPIView,
                     DevicesListAPIView, CreateMeterAPIView,
                     DeleteMeterAPIView, MeterListAPIView,
-                    UpdateMeterAPIView, ApartmentFilterMeterAPIView)
+                    UpdateMeterAPIView, ApartmentFilterMeterAPIView,
+                    DeviceFilterRangeDatesAPIView)
 from accounts.views import CreateUserAPIView, DeleteUserAPIView, UpdateUserAPIView, UserListAPIView
 
 urlpatterns = [
@@ -27,5 +28,7 @@ urlpatterns = [
     path('meter/<str:uuid>/delete', DeleteMeterAPIView.as_view(), name='meter_delete'),
     path('meters/', MeterListAPIView.as_view(), name='meter_list'),
     path('meter/<str:uuid>/update', UpdateMeterAPIView.as_view(), name='meter_update'),
-    path('apartment_node/meter', ApartmentFilterMeterAPIView.as_view())
+    path('apartment_node/meter', ApartmentFilterMeterAPIView.as_view()),
+    path('devices/date_range', DeviceFilterRangeDatesAPIView.as_view()), # этот вью не работает, к сожалению не разобралась как в поиск в
+                                                                        # swagger дату задать и откуда брать показания устройств, с счетчиков?)
 ]
