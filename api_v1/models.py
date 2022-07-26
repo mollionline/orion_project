@@ -9,8 +9,8 @@ STATUS_CHOICES = (
 )
 
 MODERATOR_STATUS_CHOICES = (
-    (False, False),
-    (True, True),
+    ('False', 'False'),
+    ('True', 'True'),
 )
 
 
@@ -52,6 +52,10 @@ class House(models.Model):
     name = models.CharField(verbose_name='Дом', max_length=100)
     apartment = models.ForeignKey('api_v1.Apartment', verbose_name='Квартира', related_name='apartments',
                                   on_delete=models.CASCADE, null=True, blank=True)
+    node = models.ForeignKey('api_v1.Node', verbose_name='Узел', related_name='house_nodes',
+                             on_delete=models.CASCADE, null=True, blank=True)
+    customer = models.ForeignKey('accounts.User', verbose_name='Клиент', related_name='house_customers',
+                                 on_delete=models.CASCADE, null=True, blank=True)
 
     def __str__(self):
         return self.name
@@ -60,6 +64,10 @@ class House(models.Model):
 class Apartment(models.Model):
     """Квартира"""
     number = models.PositiveIntegerField(verbose_name='Квартира')
+    node = models.ForeignKey('api_v1.Node', verbose_name='Узел', related_name='apartment_nodes',
+                             on_delete=models.CASCADE, null=True, blank=True)
+    customer = models.ForeignKey('accounts.User', verbose_name='Клиент', related_name='apartment_customers',
+                                 on_delete=models.CASCADE, null=True, blank=True)
 
     def __str__(self):
         return f"{self.number}"
@@ -83,7 +91,7 @@ class Device(models.Model):
     owner = models.CharField(max_length=100, verbose_name='Владелец')
     device_permission = models.CharField(max_length=50, null=False, blank=False,
                                          choices=MODERATOR_STATUS_CHOICES, verbose_name="Права устройства",
-                                         default=False)
+                                         default='False')
 
     def __init__(self):
         super(Device, self).__init__()
@@ -110,7 +118,7 @@ class Meter(models.Model):
     measure = models.CharField(max_length=50)
     meter_permission = models.CharField(max_length=50, null=False, blank=False,
                                         choices=MODERATOR_STATUS_CHOICES, verbose_name="Права устройства",
-                                        default=False)
+                                        default='False')
 
     def __str__(self):
         return self.serial_number
@@ -129,6 +137,9 @@ class Node(models.Model):
     description = models.CharField(max_length=150, verbose_name='Описание', null=True, blank=True)
     owner = models.CharField(max_length=100, verbose_name='Владелец', null=True, blank=True)
     address = models.CharField(max_length=150, verbose_name='Адрес')
+    node_permission = models.CharField(max_length=50, null=False, blank=False,
+                                        choices=MODERATOR_STATUS_CHOICES, verbose_name="Права узла",
+                                        default='False')
 
     def __str__(self):
         return self.name
